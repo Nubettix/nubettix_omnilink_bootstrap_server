@@ -14,7 +14,9 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.bytes.ByteArrayDecoder;
 import io.netty.handler.codec.bytes.ByteArrayEncoder;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
 
 public class NettyServer {
 
@@ -62,15 +64,23 @@ class ServerHandler extends SimpleChannelInboundHandler<byte[]> {
 
   @Override
   public void channelRead0(ChannelHandlerContext ctx, byte[] msg) throws Exception {
-    System.out.println("Message received: " + new String(msg));
-    for (Channel c : channels) {
-      c.writeAndFlush(msg);
-    }
+    System.out.println(
+        "[" + new Date() + "] Message received from " + ctx.channel().remoteAddress() + " : "
+            + new String(msg));
+    System.out.println("Sending message to " + ctx.channel().remoteAddress() + " : "
+        + new String(msg));
+    ctx.writeAndFlush(msg);
   }
 
   @Override
   public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
     System.out.println("Closing connection for client - " + ctx);
     ctx.close();
+  }
+
+  @Override
+  public void channelInactive(ChannelHandlerContext ctx) {
+    System.out.println("Client left - " + ctx);
+    channels.remove(ctx.channel());
   }
 }

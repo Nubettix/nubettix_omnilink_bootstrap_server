@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: omnilink-server-bootstrap
+  namespace: nubettix-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: omnilink-server-bootstrap
+  template:
+    metadata:
+      labels:
+        app: omnilink-server-bootstrap
+    spec:
+      containers:
+        - name: omnilink-server-bootstrap
+          image: localhost:5000/omnilink.server.bootstrap:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8007
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "256Mi"
+              cpu: "250m"
+      imagePullSecrets:
+        - name: dockerhub-credentials
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: omnilink-server-bootstrap
+  namespace: nubettix-dev
+spec:
+  selector:
+    app: omnilink-server-bootstrap
+  ports:
+    - protocol: TCP
+      port: 8007
+      targetPort: 8007
+  type: ClusterIP
