@@ -5,7 +5,7 @@ LABEL authors="Nubettix LLC"
 WORKDIR /app
 
 # Copia el archivo JAR de tu aplicación al contenedor
-COPY build/libs/omnilink-server-bootstrap-0.0.1-SNAPSHOT.jar /app/app.jar
+COPY build/libs/omnilink-server-bootstrap-0.0.2.jar /app/app.jar
 
 EXPOSE 8007
 # Ejecuta la aplicación Nota: La app requiere el server config en ejecución
